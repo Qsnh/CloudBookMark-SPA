@@ -1,7 +1,7 @@
 {
-  "name": "iview-project",
-  "version": "1.0.2",
-  "description": "A base project using Vue.js1.0、Vue-Router、webpack and with iView.",
+  "name": "云书签SPA项目",
+  "version": "0.0.1",
+  "description": "基于 iView 开发的云书签SPA应用。",
   "main": "index.js",
   "scripts": {
     "init": "webpack --progress --config webpack.dev.config.js",
@@ -10,9 +10,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iview/iview-project.git"
+    "url": "git+https://github.com/Qsnh/CloudBookMark-SPA.git"
   },
-  "author": "Aresn",
+  "author": "Qsnh",
   "license": "MIT",
   "dependencies": {
     "vue": "^1.0.26",
@@ -45,8 +45,5 @@
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.16.1"
   },
-  "bugs": {
-    "url": "https://github.com/iview/iview-project/issues"
-  },
-  "homepage": "https://www.iviewui.com"
+  "homepage": "https://cloudbookmark.cn"
 }
