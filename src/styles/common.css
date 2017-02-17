@@ -1,4 +1,6 @@
-/*  */
+/** 统一样式  */
+.text-center { text-align: center; }
+
 .pt-60 { padding-top: 60px; }
 
 .mt-20 { margin-top: 20px; }

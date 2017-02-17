@@ -1,39 +1,30 @@
-<style scoped lang="less">
-    .index{
-        width: 100%;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        text-align: center;
-        h1{
-            height: 150px;
-            img{
-                height: 100%;
+<style>
+.page { margin-top: 200px; }
+.web-name { font-weight: 200; }
+.web-menu { line-height: 30px; }
+</style>
+
+<template>
+    <Row type="flex" justify="center" class="page">
+        <i-col span="8" class="text-center">
+            <div class="logo"><img src="../images/logo.png" width="200" height="60" :alt="web.name"></div>
+            <h1 class="web-name">云书签 <small>您的书签管理专家！</small></h1>
+            <div class="web-menu">
+                <a v-link="{name: 'login'}">登录</a> | <a v-link="{name: 'register'}">注册</a>
+            </div>
+        </i-col>
+    </Row>    
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            web: {
+                name: '云书签',
+                url: 'https://cloudbookmark.cn'
             }
         }
-        h2{
-            color: #666;
-        }
-        .ivu-row{
-            height: 100%;
-        }
     }
-</style>
-<template>
-    <div class="index">
-        <Row type="flex" justify="center" align="middle">
-            <i-col span="24">
-                <h1>
-                    <img src="../images/logo.png">
-                </h1>
-                <h2>一套基于 Vue.js 的高质量UI组件库</h2>
-            </i-col>
-        </Row>
-    </div>
-</template>
-<script>
-    export default {
-
-    }
+}
 </script>
