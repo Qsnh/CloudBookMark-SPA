@@ -20,9 +20,7 @@
 		<i-col span="6" offset="9" class="mt-20">
 			<i-form v-ref:form-validate :model="category" :rules="formValidate">
 				<Form-item label="分类名" prop="name">
-					<i-input :value.sync="category.name" placeholder="请输入分类名">
-						<Icon type="ios-person-outline" slot="prepend"></Icon>
-					</i-input>
+					<i-input :value.sync="category.name" placeholder="请输入分类名"></i-input>
 				</Form-item>
 
 				<Form-item>
