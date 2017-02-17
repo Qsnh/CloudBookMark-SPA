@@ -57,6 +57,9 @@
 				this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('提交成功!');
+                        setTimeout(function () {
+                        	//
+                        }, 3000);
                     } else {
                         this.$Message.error('表单验证失败!');
                     }

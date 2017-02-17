@@ -14,17 +14,47 @@ const routers = {
     		require(['./views/login.vue'], resolve);
     	}
     },
-    'register': {
+    '/register': {
     	name: 'register',
     	component(resolve) {
     		require(['./views/register.vue'], resolve);
     	}
     },
-    'forgetpass': {
+    '/forgetpass': {
     	name: 'findpass',
     	component(resolve) {
     		require(['./views/findpass.vue'], resolve);
     	}
+    },
+    '/account': {
+    	name: 'account',
+    	component(resolve) {
+    		require(['./views/account.vue'], resolve);
+    	}
+    },
+    '/category/add': {
+    	name: 'category.add',
+		component(resolve) {
+			require(['./views/category/add.vue'], resolve);
+		}
+    },
+    '/user/changepass': {
+    	name: 'user.changepass',
+		component(resolve) {
+			require(['./views/user/changepass.vue'], resolve);
+		}
+    },
+    '/user/api': {
+    	name: 'user.api',
+		component(resolve) {
+			require(['./views/user/api.vue'], resolve);
+		}
+    },
+    '/bookmark/add': {
+    	name: 'bookmark.add',
+		component(resolve) {
+			require(['./views/bookmark/add.vue'], resolve);
+		}
     }
 };
 export default routers;

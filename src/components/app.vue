@@ -9,10 +9,12 @@
 <script>
     export default {
         data () {
-            return {}
+            return {
+                isLoading: true,
+            }
         },
         ready () {
-
+            this.isLoading = false;
         },
         beforeDestroy () {
 
