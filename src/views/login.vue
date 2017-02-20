@@ -5,7 +5,7 @@
 <template>
 	<Row type="flex" align="middle" justify="center">
 		<i-col span="8">
-			<h1 class="title"><img src="../images/logo.png" width="200" height="60" :alt="web.name"></h1>
+			<h1 class="title"><img src="../images/logo.png" width="200" height="60"></h1>
 
 			<i-form v-ref:form-validate :model="user" :rules="formValidate">
 				<Form-item label="邮箱" prop="email">
@@ -21,7 +21,7 @@
 				</Form-item>
 
 				<Form-item>
-		            <i-button type="ghost" @click="loginSubmit('formValidate')" long>登录</i-button>
+		            <i-button type="ghost" :loading="loading" @click="loginSubmit('formValidate')" long>登录</i-button>
 		        </Form-item>
 
 		        <Form-item>
@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import server from '../config/api'
+
 	export default {
 		data() {
 			return {
@@ -49,17 +51,32 @@
 						{required: true, message: '请输入密码', trigger: 'blur'},
 						{type: 'string', min: 6, max: 16, message: '密码长度在6-16位之间', trigger: 'blur'}
 					]
-				}
+				},
+				loading: false
 			}
 		},
 		methods: {
 			loginSubmit (name) {
 				this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('提交成功!');
-                        setTimeout(function () {
-                        	//
-                        }, 3000);
+                    	this.loading = true;
+                    	this.$http.post(server.api.login, {
+                    		'grant_type': 'password',
+                    		'client_id': server.client.client_id,
+                    		'client_secret': server.client.client_secret,
+                    		'username': this.user.email,
+                    		'password': this.user.password,
+                    		'scope': '*'
+                    	}).then((response) => {
+                    		// 提交登录状态
+                    		this.$store.commit('setAccessToken', response.body.access_token);
+                    		this.$Message.success(response.body.message);
+                    		setTimeout(() => {
+                    			this.$router.go({name: 'account'});
+                    		}, 2000);
+                    	}, (error) => {
+                    		this.$Message.error('网络错误！');
+                    	});
                     } else {
                         this.$Message.error('表单验证失败!');
                     }

@@ -5,7 +5,7 @@
 <template>
 	<Row type="flex" align="middle" justify="center">
 		<i-col span="8">
-			<h1 class="title"><img src="../images/logo.png" width="200" height="60" :alt="web.name"></h1>
+			<h1 class="title"><img src="../images/logo.png" width="200" height="60"></h1>
 
 			<i-form v-ref:form-validate :model="user" :rules="formValidate">
 				<Form-item label="邮箱" prop="email">

@@ -1,38 +1,68 @@
 /**
  * Created by aresn on 16/6/20.
  */
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import App from 'components/app.vue';
-import Routers from './router';
-import Env from './config/env';
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
+import App from 'components/app.vue'
+import Routers from './router'
+import Env from './config/env'
+import iView from 'iview'
+import 'iview/dist/styles/iview.css'
+import VueResource from 'vue-resource'
 
+Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(iView);
+Vue.use(VueResource);
+
+// Vuex定义
+const store = new Vuex.Store({
+	state: {
+		isLogin: false,
+		user: {},
+		access_token: ''
+	},
+	mutations: {
+		setAccessToken(state, access_token) {
+			state.access_token = access_token;
+		},
+		login(state, user) {
+			state.isLogin = true;
+			state.user = user;
+		},
+		logout() {
+			state.isLogin = false;
+			state.user = {};
+		}
+	}
+});
 
 // 开启debug模式
 Vue.config.debug = true;
 
 // 路由配置
-let router = new VueRouter({
+const router = new VueRouter({
     // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
     history: Env != 'production'
     //history: false
 });
 
 router.map(Routers);
-
-router.beforeEach(() => {
+ 
+router.beforeEach(({to, next, redirect}) => {
+    if (to.auth) {
+    	console.log(redirect('/login'));
+    }
     window.scrollTo(0, 0);
-});
-
-router.afterEach(() => {
-
+    return true;
 });
 
 router.redirect({
-    '*': "/index"
+    '*': '/'
 });
+
+// 绑定Vuex
+App.store = store;
+
 router.start(App, '#app');
