@@ -28,7 +28,7 @@ npm install
 ```
 
 ```
-npm init
+npm run init
 ```
 
 ```
