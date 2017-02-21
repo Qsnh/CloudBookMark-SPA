@@ -27,14 +27,16 @@ const store = new Vuex.Store({
 		setAccessToken(state, access_token) {
 			state.access_token = access_token;
 		},
-		login(state, user) {
+		login(state) {
 			state.isLogin = true;
-			state.user = user;
 		},
 		logout(state) {
 			state.isLogin = false;
 			state.user = {};
 			state.access_token = '';
+		},
+		setUser(state, user) {
+			state.user = user;
 		}
 	}
 });

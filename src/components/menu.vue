@@ -16,7 +16,7 @@
 			        <Submenu key="2">
 			            <template slot="title">
 			                <Icon type="ios-people"></Icon>
-			                用户中心
+			                {{ username }}
 			            </template>
 			            <Menu-group title="用户">
 			                <Menu-item v-link="{name: 'user.changepass'}" key="2-1">修改密码</Menu-item>
@@ -44,6 +44,11 @@
 
 <script>
 export default {
+	computed: {
+		username () {
+			return this.$store.state.user.name;
+		}
+	},
 	methods: {
 		logout () {
 			this.$Modal.confirm({

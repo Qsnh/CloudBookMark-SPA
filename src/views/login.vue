@@ -81,6 +81,7 @@ export default {
                 		this.button.text = '登录中...';
                 		// 全局状态提交 - AccessToken
                 		this.$store.commit('setAccessToken', response.body.access_token);
+                		this.$store.commit('login');
                 		// 信息提示
                 		this.$Message.success('登录成功！获取用户信息中...');
                 		this.button.text = '获取用户信息中...';
@@ -91,7 +92,7 @@ export default {
                 			}
                 		}).then((response) => {
                 			// Vuex全局状态提交 - LoginStatus
-                			this.$store.commit('login', response.body.data);
+                			this.$store.commit('setUser', response.body.data);
                 			this.button.text = '跳转中...';
                 			// 信息提示
                 			this.$Message.success('获取信息成功！');
