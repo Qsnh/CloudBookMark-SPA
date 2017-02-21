@@ -17,7 +17,14 @@
 </template>
 
 <script>
+import config from '../config/config'
+
 export default {
+    route: {
+        data() {
+            document.title = config.web_name;
+        }
+    },
     data() {
         return {
             web: {

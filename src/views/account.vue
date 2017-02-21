@@ -32,10 +32,12 @@
 import Menu from '../components/menu.vue';
 import Loading from '../components/loading.vue';
 import server from '../config/api';
+import config from '../config/config'
 
 export default {
 	route: {
 		data() {
+			document.title = '用户中心 - ' + config.web_name;
 			this.$http.get(server.api.category.bookmarks, {
 				headers: {
 					'Authorization': 'Bearer ' + this.$store.state.access_token

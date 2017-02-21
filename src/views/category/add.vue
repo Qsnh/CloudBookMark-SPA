@@ -25,10 +25,16 @@
 </template>
 
 <script>
-import Menu from '../../components/menu.vue';
-import server from '../../config/api';
+import Menu from '../../components/menu.vue'
+import server from '../../config/api'
+import config from '../../config/config'
 
 export default {
+	route: {
+		data() {
+			document.title = '添加分类 - ' + config.web_name;
+		}
+	},
 	data() {
 		return {
 			category: {

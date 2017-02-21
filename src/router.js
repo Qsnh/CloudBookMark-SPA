@@ -58,13 +58,6 @@ const routers = {
 		},
         auth: true
     },
-    '/user/api': {
-    	name: 'user.api',
-		component(resolve) {
-			require(['./views/user/api.vue'], resolve);
-		},
-        auth: true
-    },
     '/bookmark/add': {
     	name: 'bookmark.add',
 		component(resolve) {

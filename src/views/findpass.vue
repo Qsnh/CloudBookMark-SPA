@@ -27,31 +27,38 @@
 </template>
 
 <script>
-	export default {
+import config from '../config/config'
+
+export default {
+	route: {
 		data() {
-			return {
-				user: {
-					email: '',
-					password: ''
-				},
-				formValidate: {
-					email: [
-						{required: true, message: '请输入邮箱', trigger: 'blur'},
-						{type: 'email', message: '请输入正确的邮箱', trigger: 'blur'}
-					]
-				}
-			}
-		},
-		methods: {
-			loginSubmit (name) {
-				this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.$Message.success('提交成功!');
-                    } else {
-                        this.$Message.error('表单验证失败!');
-                    }
-                })
+			document.title = '找回密码 - ' + config.web_name;
+		}
+	},
+	data() {
+		return {
+			user: {
+				email: '',
+				password: ''
+			},
+			formValidate: {
+				email: [
+					{required: true, message: '请输入邮箱', trigger: 'blur'},
+					{type: 'email', message: '请输入正确的邮箱', trigger: 'blur'}
+				]
 			}
 		}
+	},
+	methods: {
+		loginSubmit (name) {
+			this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.$Message.success('提交成功!');
+                } else {
+                    this.$Message.error('表单验证失败!');
+                }
+            })
+		}
 	}
+}
 </script>

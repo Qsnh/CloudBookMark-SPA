@@ -34,8 +34,14 @@
 
 <script>
 import server from '../config/api'
+import config from '../config/config'
 
 export default {
+	route: {
+		data() {
+			document.title = '登录 - ' + config.web_name;
+		}
+	},
 	data() {
 		return {
 			user: {

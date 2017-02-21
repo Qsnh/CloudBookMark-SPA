@@ -1,7 +1,3 @@
-<style>
-	
-</style>
-
 <template>
 	<loading :loading="loading"></loading>
 	<menu></menu>
@@ -43,13 +39,15 @@
 </template>
 
 <script>
-import Menu from '../../components/menu.vue';
-import Loading from '../../components/loading.vue';
-import server from '../../config/api';
+import Menu from '../../components/menu.vue'
+import Loading from '../../components/loading.vue'
+import server from '../../config/api'
+import config from '../../config/config'
 
 export default {
 	route: {
 		data () {
+			document.title = '添加书签 - ' + config.web_name;
 			this.$http.get(server.api.category.get, {
 				headers: {
 					'Authorization': 'Bearer ' + this.$store.state.access_token

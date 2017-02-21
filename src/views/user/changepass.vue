@@ -1,7 +1,3 @@
-<style>
-	
-</style>
-
 <template>
 	<Row class="pt-60">
 		<!-- 导航栏 -->
@@ -50,8 +46,14 @@
 <script>
 import Menu from '../../components/menu.vue';
 import server from '../../config/api';
+import config from '../../config/config'
 
 export default {
+	route: {
+		data() {
+			document.title = '修改密码 - ' + config.web_name;
+		}
+	},
 	data() {
 		return {
 			user: {

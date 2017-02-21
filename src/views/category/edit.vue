@@ -26,13 +26,15 @@
 </template>
 
 <script>
-import Menu from '../../components/menu.vue';
-import Loading from '../../components/loading.vue';
-import server from '../../config/api';
+import Menu from '../../components/menu.vue'
+import Loading from '../../components/loading.vue'
+import server from '../../config/api'
+import config from '../../config/config'
 
 export default {
 	route: {
 		data() {
+			document.title = '编辑分类 - ' + config.web_name;
 			this.$http.get(server.api.category.find.replace('{id}', this.$route.params.id), {
 				headers: {
 					'Authorization': 'Bearer ' + this.$store.state.access_token
