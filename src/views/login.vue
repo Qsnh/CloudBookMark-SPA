@@ -82,6 +82,8 @@ export default {
                 		// 全局状态提交 - AccessToken
                 		this.$store.commit('setAccessToken', response.body.access_token);
                 		this.$store.commit('login');
+                		// LocalStorage信息存储
+                		localStorage.access_token = this.$store.state.access_token;
                 		// 信息提示
                 		this.$Message.success('登录成功！获取用户信息中...');
                 		this.button.text = '获取用户信息中...';

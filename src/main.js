@@ -10,6 +10,7 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import VueResource from 'vue-resource'
 import Config from './config/Config'
+import server from './config/api'
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -54,13 +55,30 @@ const router = new VueRouter({
 router.map(Routers);
  
 router.beforeEach(({to, next, redirect}) => {
+    // 还原滚动条
+    window.scrollTo(0, 0);
+    // Auth验证
     if (to.auth) {
     	if (!store.state.isLogin) {
+    		if (localStorage.access_token) {
+    			// 自动登录
+    			store.commit('setAccessToken', localStorage.access_token);
+    			store.commit('login');
+    			// 获取用户信息
+    			Vue.http.get(server.api.user, {
+    				headers: {
+    					'Authorization': 'Bearer ' + store.state.access_token
+    				}
+    			}).then((response) => {
+    				store.commit('setUser', response.body.data);
+    			}, (error) => {
+    				redirect({name: 'login'});
+    			});
+    			return true;
+    		}
     		redirect({name: 'login'});
     	}
     }
-    // 还原滚动条
-    window.scrollTo(0, 0);
     return true;
 });
 

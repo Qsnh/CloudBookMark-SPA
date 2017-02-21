@@ -1,7 +1,10 @@
 <template>
 	<loading :loading.sync="loading"></loading>
 	<menu></menu>
-	<Row type="flex" class="pt-60">
+	<div class="pt-60" v-if="categories.length == 0">
+		<nodata></nodata>
+	</div>
+	<Row type="flex" class="pt-60" v-else>
 		<i-col class="mt-10" span="20" offset="2" v-for="(key, category) in categories">
 			<Card class="mt-10">
 				<div slot="title">
@@ -14,7 +17,11 @@
 					</Poptip>
 				</div>
 				<Row class="lh-40">
-					<i-col span="6" v-for="(index, bookmark) in category.bookmarks.data">
+					<div v-if="category.bookmarks.data.length == 0">
+						<nodata></nodata>
+					</div>
+					<div v-else>
+						<i-col span="6" v-for="(index, bookmark) in category.bookmarks.data">
 						<Poptip trigger="hover">
 							<a v-link="bookmark.bookmark_url" target="_blank">{{ bookmark.bookmark_name }}</a>
 							<div slot="content">
@@ -22,6 +29,7 @@
 							</div>
 						</Poptip>
 					</i-col>
+					</div>
 				</Row>
 			</Card>
 		</i-col>
@@ -29,6 +37,7 @@
 </template>
 
 <script>
+import Nodata from '../components/nodata.vue';
 import Menu from '../components/menu.vue';
 import Loading from '../components/loading.vue';
 import server from '../config/api';
@@ -61,6 +70,7 @@ export default {
 		}
 	},
 	components: {
+		'nodata': Nodata,
 		'menu': Menu,
 		'loading': Loading
 	},
