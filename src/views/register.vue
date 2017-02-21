@@ -47,77 +47,77 @@
 <script>
 import server from '../config/api'
 
-	export default {
-		data() {
-			return {
-				user: {
-					name: '',
-					email: '',
-					password: '',
-					password_confirmation: ''
-				},
-				formValidate: {
-					name: [
-						{required: true, message: '请输入呢称', trigger: 'blur'},
-						{type: 'string', min: 1, max: 10, message: '呢称长度在6-16个字之间', trigger: 'blur'}
-					],
-					email: [
-						{required: true, message: '请输入邮箱', trigger: 'blur'},
-						{type: 'email', message: '请输入正确的邮箱', trigger: 'blur'}
-					],
-					password: [
-						{required: true, message: '请输入密码', trigger: 'blur'},
-						{type: 'string', min: 6, max: 16, message: '密码长度在6-16位之间', trigger: 'blur'}
-					],
-					password_confirmation: [
-						{validator: (rule, value, callback) => {
-							if (!value) {
-								return callback(new Error('请输入密码'));
-							}
-							if (value !== this.user.password) {
-								return callback(new Error('两次输入密码不一致'));
-							}
+export default {
+	data() {
+		return {
+			user: {
+				name: '',
+				email: '',
+				password: '',
+				password_confirmation: ''
+			},
+			formValidate: {
+				name: [
+					{required: true, message: '请输入呢称', trigger: 'blur'},
+					{type: 'string', min: 1, max: 10, message: '呢称长度在6-16个字之间', trigger: 'blur'}
+				],
+				email: [
+					{required: true, message: '请输入邮箱', trigger: 'blur'},
+					{type: 'email', message: '请输入正确的邮箱', trigger: 'blur'}
+				],
+				password: [
+					{required: true, message: '请输入密码', trigger: 'blur'},
+					{type: 'string', min: 6, max: 16, message: '密码长度在6-16位之间', trigger: 'blur'}
+				],
+				password_confirmation: [
+					{validator: (rule, value, callback) => {
+						if (!value) {
+							return callback(new Error('请输入密码'));
+						}
+						if (value !== this.user.password) {
+							return callback(new Error('两次输入密码不一致'));
+						}
 
-							return callback();
-						}, trigger: 'blur'}
-					]
-				},
-				button: {
-					text: '注册',
-					loading: false
-				}
-			}
-		},
-		methods: {
-			loginSubmit (name) {
-				this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.button.loading = true;
-                        this.$http.post(server.api.register, {
-                        	name: this.user.name,
-	                        email: this.user.email,
-	                        password: this.user.password,
-	                        password_confirmation: this.user.password_confirmation,
-                        }).then((response) => {
-                        	if (response.body.code == 0) {
-                        		this.button.text = '跳转中...';
-                        		this.$Message.success(response.body.message + '2秒后跳转...');
-                        		setTimeout(() => {
-                        			this.$router.go({name: 'login'});
-                        		}, 2000);
-                        	} else {
-                        		this.button.loading = false;
-                        		this.$Message.error(response.body.message);
-                        	}
-                        }, (error) => {
-                        	this.button.loading = false;
-                        	this.$Message.error('网路错误！');
-                        });
-                    } else {
-                        this.$Message.error('请输入有效信息！');
-                    }
-                })
+						return callback();
+					}, trigger: 'blur'}
+				]
+			},
+			button: {
+				text: '注册',
+				loading: false
 			}
 		}
+	},
+	methods: {
+		loginSubmit (name) {
+			this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.button.loading = true;
+                    this.$http.post(server.api.register, {
+                    	name: this.user.name,
+                        email: this.user.email,
+                        password: this.user.password,
+                        password_confirmation: this.user.password_confirmation,
+                    }).then((response) => {
+                    	if (response.body.code == 0) {
+                    		this.button.text = '跳转中...';
+                    		this.$Message.success(response.body.message + '1秒后跳转...');
+                    		setTimeout(() => {
+                    			this.$route.router.go({name: 'login'});
+                    		}, 1000);
+                    	} else {
+                    		this.button.loading = false;
+                    		this.$Message.error(response.body.message);
+                    	}
+                    }, (error) => {
+                    	this.button.loading = false;
+                    	this.$Message.error('服务器出错！');
+                    });
+                } else {
+                    this.$Message.error('请输入有效信息！');
+                }
+            })
+		}
 	}
+}
 </script>

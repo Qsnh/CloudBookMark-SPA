@@ -1,22 +1,23 @@
 <template>
+	<loading :loading="loading"></loading>
 	<menu></menu>
 	<Row class="pt-60">
 		<i-col span="24" class="normal-crossbar">
 			<Row>
 				<i-col span="22" offset="2">
-					<h3>添加分类</h3>
+					<h3>编辑分类</h3>
 				</i-col>
 			</Row>
 		</i-col>
 
 		<i-col span="6" offset="9" class="mt-20">
 			<i-form v-ref:form-validate :model="category" :rules="formValidate">
-				<Form-item label="分类名" prop="name">
-					<i-input :value.sync="category.name" placeholder="请输入分类名"></i-input>
+				<Form-item label="分类名" prop="category_name">
+					<i-input :value.sync="category.category_name" placeholder="请输入分类名"></i-input>
 				</Form-item>
 
 				<Form-item>
-		            <i-button type="ghost" :loading="button.loading" @click="loginSubmit('formValidate')">添加分类</i-button>
+		            <i-button type="ghost" :loading="button.loading" @click="loginSubmit('formValidate')">编辑</i-button>
 		        </Form-item>
 			</i-form>
 		</i-col>
@@ -26,13 +27,33 @@
 
 <script>
 import Menu from '../../components/menu.vue';
+import Loading from '../../components/loading.vue';
 import server from '../../config/api';
 
 export default {
+	route: {
+		data() {
+			this.$http.get(server.api.category.find.replace('{id}', this.$route.params.id), {
+				headers: {
+					'Authorization': 'Bearer ' + this.$store.state.access_token
+				}
+			}).then((response) => {
+				if (response.body.code == 0) {
+					this.category = response.body.data;
+					this.loading = false;
+				} else {
+					this.$Message.error(response.body.message);
+				}
+			}, (error) => {
+				this.$Message.error('请求失败！');
+			});
+		}
+	},
 	data() {
 		return {
+			loading: true,
 			category: {
-				name: ''
+				category_name: ''
 			},
 			formValidate: {
 				name: [
@@ -46,23 +67,26 @@ export default {
 		}
 	},
 	components: {
-		'menu': Menu
+		'menu': Menu,
+		'loading': Loading
 	},
 	methods: {
 		loginSubmit(name) {
 			this.$refs[name].validate((valid) => {
                 if (valid) {
                 	this.button.loading = true;
-                    this.$http.post(server.api.category.add, {
-                    	'category_name': this.category.name
+                    this.$http.post(server.api.category.edit.replace('{id}', this.$route.params.id), {
+                    	category_name: this.category.category_name
                     }, {
                     	headers: {
                     		'Authorization': 'Bearer ' + this.$store.state.access_token
                     	}
                     }).then((response) => {
                     	if (response.body.code == 0) {
-                    		this.category = {name: ''};
                     		this.$Message.success(response.body.message);
+                    		setTimeout(() => {
+                    			this.$route.router.go({name: 'account'});
+                    		}, 1000);
                     	} else {
                     		this.$Message.error(response.body.message);
                     	}

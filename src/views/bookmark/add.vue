@@ -3,12 +3,9 @@
 </style>
 
 <template>
+	<loading :loading="loading"></loading>
+	<menu></menu>
 	<Row class="pt-60">
-		<!-- 导航栏 -->
-		<i-col span="24">
-			<menu></menu>
-		</i-col>
-
 		<i-col span="24" class="normal-crossbar">
 			<Row>
 				<i-col span="22" offset="2">
@@ -22,7 +19,7 @@
 
 				<Form-item label="书签分类" prop="category_id">
 					<i-select :model.sync="bookmark.category_id" placeholder="请选择书签分类">
-				        <i-option v-for="item in categories" :value="item.id">{{ item.name }}</i-option>
+				        <i-option v-for="category in categories" :value="category.id">{{ category.category_name }}</i-option>
 				    </i-select>
 				</Form-item>
 
@@ -37,7 +34,7 @@
 				</Form-item>
 
 				<Form-item>
-		            <i-button type="ghost" @click="loginSubmit('formValidate')">添加</i-button>
+		            <i-button type="ghost" :loading="button.loading" @click="loginSubmit('formValidate')">添加</i-button>
 		        </Form-item>
 			</i-form>
 		</i-col>
@@ -47,14 +44,32 @@
 
 <script>
 import Menu from '../../components/menu.vue';
+import Loading from '../../components/loading.vue';
+import server from '../../config/api';
 
 export default {
+	route: {
+		data () {
+			this.$http.get(server.api.category.get, {
+				headers: {
+					'Authorization': 'Bearer ' + this.$store.state.access_token
+				}
+			}).then((response) => {
+				if (response.body.code == 0) {
+					this.categories = response.body.data;
+					this.loading = false;
+				} else {
+					this.$Message.error(response.body.message);
+				}
+			}, (error) => {
+				this.$Message.error('服务器出错！');
+			});
+		}
+	},
 	data() {
 		return {
-			categories: [
-				{name: '分类一', id: 1},
-				{name: '分类二', id: 2}
-			],
+			loading: true,
+			categories: [],
 			selected_category: '',
 			bookmark: {
 				category_id: '',
@@ -72,22 +87,47 @@ export default {
 					{required: true, message: '请输入书签地址', trigger: 'blur'},
 					{type: 'url', message: '请输入有效URL', trigger: 'blur'}
 				]
+			},
+			button: {
+				loading: false
 			}
 		}
 	},
 	components: {
-		'menu': Menu
+		'menu': Menu,
+		'loading': Loading
 	},
 	methods: {
 		loginSubmit(name) {
 			this.$refs[name].validate((valid) => {
                 if (valid) {
-                    this.$Message.success('提交成功!');
-                    setTimeout(function () {
-                    	//
-                    }, 3000);
+                	this.button.loading = true;
+                    this.$http.post(server.api.bookmark.add, {
+                    	'category_id': this.bookmark.category_id,
+                    	'bookmark_name': this.bookmark.title,
+                    	'bookmark_url': this.bookmark.url
+                    }, {
+                    	headers: {
+                    		'Authorization': 'Bearer ' + this.$store.state.access_token
+                    	}
+                    }).then((response) => {
+                    	if (response.body.code == 0) {
+                    		this.bookmark = {
+                    			category_id: '',
+                    			title: '',
+                    			url: ''
+                    		};
+                    		this.$Message.success(response.body.message);
+                    	} else {
+                    		this.$Message.error(response.body.message);
+                    	}
+                    	this.button.loading = false;
+                    }, (error) => {
+                    	this.button.loading = false;
+                    	this.$Message.error('服务器出错！');
+                    });
                 } else {
-                    this.$Message.error('表单验证失败!');
+                    this.$Message.error('请输入有效信息！');
                 }
             })
 		}

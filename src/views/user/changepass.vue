@@ -39,7 +39,7 @@
 				</Form-item>
 
 				<Form-item>
-		            <i-button type="ghost" @click="loginSubmit('formValidate')">修改密码</i-button>
+		            <i-button type="ghost" :loading="button.loading" @click="loginSubmit('formValidate')">修改密码</i-button>
 		        </Form-item>
 			</i-form>
 		</i-col>
@@ -49,6 +49,7 @@
 
 <script>
 import Menu from '../../components/menu.vue';
+import server from '../../config/api';
 
 export default {
 	data() {
@@ -80,6 +81,9 @@ export default {
 							return callback();
 						}, trigger: 'blur'}
 				]
+			},
+			button: {
+				loading: false
 			}
 		}
 	},
@@ -90,9 +94,34 @@ export default {
 		loginSubmit (name) {
 			this.$refs[name].validate((valid) => {
                 if (valid) {
-                    this.$Message.success('提交成功!');
+                	this.button.loading = true;
+                    this.$http.post(server.api.change_password, {
+                    	old_password: this.user.old_password,
+                    	new_password: this.user.new_password,
+                    	new_password_confirmation: this.user.new_password_confirmation
+                    }, {
+                    	headers: {
+                    		'Authorization': 'Bearer ' + this.$store.state.access_token
+                    	}
+                    }).then((response) => {
+                    	if (response.body.code == 0) {
+                    		this.user = {
+                    			old_password: '',
+								new_password: '',
+								new_password_confirmation: ''
+                    		};
+                    		this.$Message.success(response.body.message);
+                    	} else {
+                    		this.$Message.error(response.body.message);
+                    	}
+                    	this.button.loading = false;
+                    }, (error) => {
+                    	this.button.loading = false;
+                    	console.log('服务器错误！');
+                    });
                 } else {
-                    this.$Message.error('表单验证失败!');
+                	this.button.loading = false;
+                    this.$Message.error('请输入有效信息！');
                 }
             })
 		}

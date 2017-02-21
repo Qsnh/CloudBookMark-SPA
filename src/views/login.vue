@@ -21,7 +21,7 @@
 				</Form-item>
 
 				<Form-item>
-		            <i-button type="ghost" :loading="loading" @click="loginSubmit('formValidate')" long>登录</i-button>
+		            <i-button type="ghost" :loading="button.loading" @click="loginSubmit('formValidate')" long>{{ button.text }}</i-button>
 		        </Form-item>
 
 		        <Form-item>
@@ -35,53 +35,80 @@
 <script>
 import server from '../config/api'
 
-	export default {
-		data() {
-			return {
-				user: {
-					email: '',
-					password: ''
-				},
-				formValidate: {
-					email: [
-						{required: true, message: '请输入邮箱', trigger: 'blur'},
-						{type: 'email', message: '请输入正确的邮箱', trigger: 'blur'}
-					],
-					password: [
-						{required: true, message: '请输入密码', trigger: 'blur'},
-						{type: 'string', min: 6, max: 16, message: '密码长度在6-16位之间', trigger: 'blur'}
-					]
-				},
+export default {
+	data() {
+		return {
+			user: {
+				email: '',
+				password: ''
+			},
+			formValidate: {
+				email: [
+					{required: true, message: '请输入邮箱', trigger: 'blur'},
+					{type: 'email', message: '请输入正确的邮箱', trigger: 'blur'}
+				],
+				password: [
+					{required: true, message: '请输入密码', trigger: 'blur'},
+					{type: 'string', min: 6, max: 16, message: '密码长度在6-16位之间', trigger: 'blur'}
+				]
+			},
+			button: {
+				text: '登录',
 				loading: false
 			}
-		},
-		methods: {
-			loginSubmit (name) {
-				this.$refs[name].validate((valid) => {
-                    if (valid) {
-                    	this.loading = true;
-                    	this.$http.post(server.api.login, {
-                    		'grant_type': 'password',
-                    		'client_id': server.client.client_id,
-                    		'client_secret': server.client.client_secret,
-                    		'username': this.user.email,
-                    		'password': this.user.password,
-                    		'scope': '*'
-                    	}).then((response) => {
-                    		// 提交登录状态
-                    		this.$store.commit('setAccessToken', response.body.access_token);
-                    		this.$Message.success(response.body.message);
-                    		setTimeout(() => {
-                    			this.$router.go({name: 'account'});
-                    		}, 2000);
-                    	}, (error) => {
-                    		this.$Message.error('网络错误！');
-                    	});
-                    } else {
-                        this.$Message.error('表单验证失败!');
-                    }
-                })
-			}
+		}
+	},
+	methods: {
+		loginSubmit (name) {
+			this.$refs[name].validate((valid) => {
+                if (valid) {
+                	this.button.loading = true;
+                	this.$http.post(server.api.login, {
+                		'grant_type': 'password',
+                		'client_id': server.client.client_id,
+                		'client_secret': server.client.client_secret,
+                		'username': this.user.email,
+                		'password': this.user.password,
+                		'scope': '*'
+                	}).then((response) => {
+                		// 提交登录状态
+                		this.button.text = '登录中...';
+                		// 全局状态提交 - AccessToken
+                		this.$store.commit('setAccessToken', response.body.access_token);
+                		// 信息提示
+                		this.$Message.success('登录成功！获取用户信息中...');
+                		this.button.text = '获取用户信息中...';
+                		// 获取用户信息
+                		this.$http.get(server.api.user, {
+                			headers: {
+                				'Authorization': 'Bearer ' + this.$store.state.access_token
+                			}
+                		}).then((response) => {
+                			// Vuex全局状态提交 - LoginStatus
+                			this.$store.commit('login', response.body.data);
+                			this.button.text = '跳转中...';
+                			// 信息提示
+                			this.$Message.success('获取信息成功！');
+                			// 跳转
+                			setTimeout(() => {
+                				this.$route.router.go({name: 'account'});
+                			}, 1000);
+                		}, (error) => {
+                			this.button = {
+                				loading: false,
+                				text: '登录'
+                			};
+                			this.$Message.error('获取信息失败！');
+                		});
+                	}, (error) => {
+                		this.button.loading = true;
+                		this.$Message.error('服务器出错！');
+                	});
+                } else {
+                    this.$Message.error('请填写有效信息！');
+                }
+            })
 		}
 	}
+}
 </script>

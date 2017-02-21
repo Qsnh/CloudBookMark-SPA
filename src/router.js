@@ -44,6 +44,13 @@ const routers = {
 		},
         auth: true
     },
+    '/category/:id/edit': {
+        name: 'category.edit',
+        component(resolve) {
+            require(['./views/category/edit.vue'], resolve);
+        },
+        auth: true
+    },
     '/user/changepass': {
     	name: 'user.changepass',
 		component(resolve) {

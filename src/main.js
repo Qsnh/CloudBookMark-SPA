@@ -13,8 +13,8 @@ import VueResource from 'vue-resource'
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
-Vue.use(iView);
 Vue.use(VueResource);
+Vue.use(iView);
 
 // Vuex定义
 const store = new Vuex.Store({
@@ -31,9 +31,10 @@ const store = new Vuex.Store({
 			state.isLogin = true;
 			state.user = user;
 		},
-		logout() {
+		logout(state) {
 			state.isLogin = false;
 			state.user = {};
+			state.access_token = '';
 		}
 	}
 });
@@ -52,7 +53,9 @@ router.map(Routers);
  
 router.beforeEach(({to, next, redirect}) => {
     if (to.auth) {
-    	console.log(redirect('/login'));
+    	if (!store.state.isLogin) {
+    		redirect({name: 'login'});
+    	}
     }
     window.scrollTo(0, 0);
     return true;

@@ -20,8 +20,7 @@
 			            </template>
 			            <Menu-group title="用户">
 			                <Menu-item v-link="{name: 'user.changepass'}" key="2-1">修改密码</Menu-item>
-			                <Menu-item v-link="{name: 'user.api'}" key="2-2">API密钥</Menu-item>
-			                <Menu-item v-link="{name: 'category.add'}" key="2-3">安全退出</Menu-item>
+			                <Menu-item @click="logout" key="2-2">安全退出</Menu-item>
 			            </Menu-group>
 			        </Submenu>
 			        <Submenu key="1">
@@ -45,5 +44,19 @@
 
 <script>
 export default {
+	methods: {
+		logout () {
+			this.$Modal.confirm({
+				title: '警告',
+				content: '<p>确定退出当前账号？</p>',
+				cancelText: '取消',
+				okText: '安全退出',
+				onOk: () => {
+					this.$store.commit('logout');
+					this.$route.router.go({name: 'login'});
+				}
+			})
+		}
+	}
 }
 </script>
