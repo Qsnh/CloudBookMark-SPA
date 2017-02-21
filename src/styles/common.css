@@ -4,8 +4,10 @@
 .pt-60 { padding-top: 60px; }
 
 .mt-20 { margin-top: 20px; }
-
 .mt-10 { margin-top: 10px; }
+
 .lh-40 { line-height: 40px; }
 
 .normal-crossbar { height: 120px; background-color: #464c5b; color: #FFF; line-height: 120px; }
+
+.cursor { cursor: pointer; }

@@ -8,7 +8,7 @@
 <template>
 	<div class="diy-menu">
 		<Row class="top-nav-header">
-			<i-col span="6" offset="2">
+			<i-col class="cursor" span="6" offset="2" v-link="{name: 'account'}">
 				<img src="../images/logo.png" width="200" height="60">
 			</i-col>
 			<i-col span="14">
