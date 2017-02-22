@@ -23,7 +23,7 @@
 					<div v-else>
 						<i-col span="6" v-for="(index, bookmark) in category.bookmarks.data">
 						<Poptip trigger="hover">
-							<a v-link="bookmark.bookmark_url" target="_blank">{{ bookmark.bookmark_name }}</a>
+							<a href="{{ bookmark.bookmark_url }}" target="_blank">{{ bookmark.bookmark_name }}</a>
 							<div slot="content">
 								<i-button type="error" @click="deleteBookmark(index, category.bookmarks.data, bookmark)" size="small">删除</i-button>
 							</div>

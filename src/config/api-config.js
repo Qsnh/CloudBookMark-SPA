@@ -1,5 +1,5 @@
 let config = {
-	host: 'http://cbm.app:8080',
+	host: 'https://cloudbookmark.cn',
 	prefix: '/api/v1'
 }
 

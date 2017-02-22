@@ -110,8 +110,9 @@ export default {
                 			this.$Message.error('获取信息失败！');
                 		});
                 	}, (error) => {
-                		this.button.loading = true;
-                		this.$Message.error('服务器出错！');
+                		console.log(error);
+                		this.button.loading = false;
+                		this.$Message.error(error.body.message);
                 	});
                 } else {
                     this.$Message.error('请填写有效信息！');
